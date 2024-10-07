@@ -21,7 +21,7 @@ int main() {
         count1-=2;
     }
     if (h%2==0) {
-            count=4;
+            count=2;
         } else {
             count=3;
         }
