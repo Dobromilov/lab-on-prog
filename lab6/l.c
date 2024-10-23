@@ -67,6 +67,7 @@
 
 // На 5
 #include <stdio.h>
+#define N 10
 
 int suco_array(int n, int array[]) {
     int sum=0, count=0;
@@ -107,24 +108,37 @@ void print_array(int n, int array[n]) {
     printf("\n");
 }
 
+void arr_new(int n, int array[n]) {
+    printf("mas_new: ");
+    for (int i=0; i<n; i++){
+        if (array[i]!=0){
+            printf("%d ", array[i]);
+        }
+    }
+    printf("\n");
+}
+
+
 int main() {
-    int array[10] = {324, 123, 567, 437, 878, 654, 132786, 5763, 654, 334},mx,mn,count=0;
-    float average=suco_array(10, array);
+    int array[N] = {324, 123, 567, 437, 878, 654, 132786, 5763, 654, 334},mx,mn,count=0;
+    float average=suco_array(N, array);
     printf("average=%f\n",average);
-    for (int i = 0,n=10; i < n; i++) {
+    for (int i = 0,n=N; i < n; i++) {
         if (array[i]<average) {
             count+=1;
         }
     }
     int ind_mx,ind_mn;
-    mx=array[mx_array(10,array)];
-    mn=array[mn_array(10,array)];
-    ind_mx=mx_array(10,array);
-    ind_mn=mn_array(10,array);
+    mx=array[mx_array(N,array)];
+    mn=array[mn_array(N,array)];
+    ind_mx=mx_array(N,array);
+    ind_mn=mn_array(N,array);
     printf("mn=%d, mx=%d\n ind_mn=%d, ind_mx=%d\n count=%d\n",mn,mx,ind_mn,ind_mx,count);
-    print_array(10,array);
+    print_array(N,array);
     for (int st=ind_mn,en=ind_mx-1; (st!=en); st++) {
         array[st+1]=0;
     }
-    print_array(10,array);
+    print_array(N,array);
+    arr_new(N,array);
 }
+// зануление можно было еще выполнить создав новый массив: посчитать кол-во нулей, создать массив нулей длины N-count_null_in_array, и присваивать только ненулевые значения ячейкам нового массива.
