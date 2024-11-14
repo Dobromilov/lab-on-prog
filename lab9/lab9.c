@@ -66,9 +66,29 @@ void bubble_sort(int **matrix_D, int m, int column_index) {
 }
 
 int main() {
-    int m, n, k;
+    int m, n, k, option, min, max;
     printf("Введите размеры матриц m, n, k: ");
     scanf("%d %d %d", &m, &n, &k);
+    if (n<=0 || m<=0 || k<=0 || n>15 || m>15 || k>15){
+        printf("error..");
+        return 1;
+    }
+    printf("Заполняешь сам или рандомно? (0 V 1): ");
+    if (scanf("%d", &option) != 1) {
+            printf("error..\n");
+            return 1;
+    }
+    if (option == 1) {
+    printf("Введите диапазон рандома(min max): ");
+    if (scanf("%d %d", &min, &max) != 2) {
+        printf("error..\n");
+        return 1;
+    }
+    if (min > max) {
+        printf("Ошибка: min не может быть больше max.\n");
+        return 1;
+    }
+}
     
     
     int **matrix_B = (int **)malloc(m * sizeof(int *));
@@ -78,10 +98,16 @@ int main() {
     printf("Введите элементы матрицы B (размер %dx%d):\n", m, k);
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < k; j++) {
-            scanf("%d", &matrix_B[i][j]);
+            if (option==0){
+                scanf("%d", &matrix_B[i][j]);
+            } else {
+                matrix_B[i][j]=min + rand() % (max - min + 1);
+            }
         }
     }
-    
+    if (option==1){
+        print_matrix(m, k, matrix_B);
+    }
     
     int **matrix_E = (int **)malloc(k * sizeof(int *));
     for (int i = 0; i < k; i++) {
@@ -90,9 +116,17 @@ int main() {
     printf("Введите элементы матрицы E (размер %dx%d):\n", k, n);
     for (int i = 0; i < k; i++) {
         for (int j = 0; j < n; j++) {
-            scanf("%d", &matrix_E[i][j]);
+            if (option==0){
+                scanf("%d", &matrix_E[i][j]);
+            } else {
+                matrix_E[i][j]=min + rand() % (max - min + 1);
+            }
         }
     }
+    if (option==1){
+        print_matrix(k, n, matrix_E);
+    }
+    
     int **matrix_D = (int **)malloc(m * sizeof(int *));
     for (int i = 0; i < m; i++) {
         matrix_D[i] = (int *)malloc(n * sizeof(int));
