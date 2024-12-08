@@ -146,3 +146,25 @@ int main(void){
     max(p_a,p_b);
     //printf("%d %d",*p_a,*p_b);
 }
+
+//-------------------------------------------------------------
+(* 6. Напишите программу на C для хранения n элементов в массиве и распечатки элементов с использованием указателя. *)
+
+#include  <stdio.h>
+#include <stdlib.h>
+
+void print_array(int *arr,int count){
+    for (int i = 0; i < count; i++)
+        printf("%d ", arr[i]);
+}
+
+int main(void){
+    int count;
+    scanf("%d",&count);
+    int *arr=(int *)malloc(count*sizeof(int));
+    for (int i=0; i<count; i++){
+        arr[i]=i;
+    }
+    print_array(arr,count);
+}
+//-------------------------------------------------------------
