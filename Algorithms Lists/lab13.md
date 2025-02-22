@@ -39,6 +39,7 @@ int main(void){
     node_t *head = NULL;  // Голова списка
     node_t *last = NULL;  // Последний узел списка
 
+    printf("Введите числа (0 для завершения):\n ");
     while (1) {
         scanf("%d", &temp);
         if (temp != 0) {
@@ -53,7 +54,7 @@ int main(void){
             break;
         }
     }
-    printf("Введите числа (0 для завершения):\n ");
+
     printf("Список: ");
     print_list(head);
     free_list(head);
