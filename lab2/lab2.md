@@ -1,7 +1,7 @@
+```c
 #include <stdio.h>
 #include <math.h>
-/*
-1)
+//1)
 int main(){
 	int a;
 	scanf("%d",&a);
@@ -15,12 +15,14 @@ int main(){
 		printf("NO");
 	}
 
-}*/
+}
+```
 
 
+```c
+#include <stdio.h>
+#include <math.h>
 
-/*
-2)
 int main(){
 	float temperature;
 	char sim;
@@ -34,11 +36,13 @@ int main(){
 	} else if (sim!=str[0] && sim!=str[1]) {
 		printf("Output error");
 	}
-}*/
+}
+```
+```c
+//3.1)
+#include <stdio.h>
+#include <math.h>
 
-
-/*
-3.1)
 int main() {
 	float x,y;
 	printf("x: ");
@@ -51,13 +55,13 @@ int main() {
 		printf("No");
 	}
 }
-*/
+```
 
+```c
+//3.2)
+#include <stdio.h>
+#include <math.h>
 
-
-/*
-3.2) для душевного спокойствия еще сделал
-*/
 int main(){
 	float x,y;
 	scanf("%f",&x);
@@ -69,4 +73,6 @@ int main(){
 	}
 
 }
+```
 
+``
