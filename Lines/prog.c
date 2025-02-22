@@ -1,3 +1,4 @@
+```c
 //3 номер
 
 #include <stdio.h>
@@ -26,3 +27,4 @@ int main() {
     }
     printf("слово: %s; кол-во букв 'a': %d\n",wort_print,mx_count);
 }
+```
