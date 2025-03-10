@@ -10,3 +10,18 @@ void bubbleSort(int arr[], int n) {
     }
 }
 //comment
+
+int main() {
+    int arr[] = {4, 2};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    bubbleSort(arr, n);
+
+    printf("Отсортированный массив: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
