@@ -1,2 +1,2 @@
-Hello, Git!
-hello
+HELLO, GIT!
+HELLO
