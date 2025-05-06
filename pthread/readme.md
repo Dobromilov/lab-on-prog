@@ -117,6 +117,201 @@
 
 ---
 
+# 1). Создание потока
+```c
+void* child_thread(void* arg) {
+    for (int i = 0; i < 5; i++) 
+        printf("Child: line %d\n", i+1);
+    return NULL;
+}
+
+int main(){
+    pthread_t thread;
+    pthread_create(&thread, NULL, child_thread, NULL);
+    for (int i =0; i<5; i++){
+        printf("Main: %d\n",i+1);
+    }
+    pthread_join(thread, NULL);    
+}
+```
+**Что делает:**
+- Создаёт один дочерний поток
+- Главный и дочерний потоки выводят по 5 строк **параллельно**
+- `pthread_join()` гарантирует завершение дочернего потока перед выходом
+
+**Вывод (пример):**
+```
+Main: 1
+Child: line 1
+Main: 2
+Child: line 2
+...
+```
+*Порядок строк может быть произвольным!*
+
+---
+
+# 2) Ожидание потока (модификация)
+```c
+int main(){
+    pthread_t thread;
+    pthread_create(&thread, NULL, child_thread, NULL);
+    pthread_join(thread, NULL); // Ожидание завершения дочернего потока
+    for (int i =0; i<5; i++){
+        printf("Main: %d\n",i+1);
+    }
+}
+```
+**Что изменилось:**
+- Главный поток **ждёт завершения дочернего** перед своим выводом
+- Вывод будет строго последовательным:
+  ```
+  Child: line 1
+  Child: line 2
+  ...
+  Main: 1
+  Main: 2
+  ...
+  ```
+
+---
+
+# 3) Параметры потока
+```c
+void* child_thread(void* arg) {
+    int id=*(int*)arg;
+    for (int i = 0; i < 3; i++) 
+        printf("thread: %d line %d\n",id , i+1);
+    return NULL;
+}
+
+int main(){
+    pthread_t thread[N];
+    for (int i=0; i<N; i++){
+        int id=i+1;
+        pthread_create(&thread[i], NULL, child_thread, &id);
+    }
+    for (int i = 0; i < N; i++) 
+        pthread_join(thread[i], NULL);
+}
+```
+**Проблема:**  
+Все потоки получат один адрес переменной `id`, которая меняется в цикле. Это приводит к **гонке данных** (race condition).
+
+**Исправление:**  
+Нужно выделять отдельную память для каждого потока:
+```c
+int* id = malloc(sizeof(int));
+*id = i+1;
+pthread_create(&thread[i], NULL, child_thread, id);
+```
+
+---
+
+### 4) Завершение потока без ожидания
+```c
+void* thread_func(void* arg) {
+  int id = *(int*)arg;
+  free(arg);
+  while(1) {
+      printf("Thread %d working\n", id);
+      sleep(1);
+  }
+  return NULL;
+}
+
+int main() {
+  pthread_t t[N];
+  for (int i = 0; i < N; i++) {
+      int* arg = malloc(sizeof(int));
+      *arg = i+1;
+      pthread_create(&t[i], NULL, thread_func, arg);
+  }
+
+  sleep(2);
+  for (int i = 0; i < 4; i++) 
+      pthread_cancel(t[i]);
+}
+```
+**Что делает:**
+- Создаёт 4 потока с бесконечным циклом
+- Через 2 секунды прерывает их с помощью `pthread_cancel()`
+- **Проблема:** Не освобождает ресурсы при отмене
+
+---
+
+# 5) Обработка завершения потока
+```c
+void* cleanup_p(void* arg){
+  int id = *(int*)arg;
+  printf("Thread %d exiting\n", id);
+  free(arg);
+}
+
+void* thread_func(void* arg) {
+  pthread_cleanup_push(cleanup_p, arg);
+  int id = *(int*)arg;
+  free(arg);
+  
+  while(1) {
+      printf("Thread %d working\n", id);
+      sleep(1);
+  }
+  pthread_cleanup_pop(1);
+  return NULL;
+}
+```
+**Улучшения:**
+- `pthread_cleanup_push()` регистрирует функцию очистки
+- При отмене потока автоматически вызывается `cleanup_p()`
+- Гарантированное освобождение ресурсов
+
+---
+
+# 6) Sleepsort
+```c
+void* sleeper(void* arg) {
+    int v = *(int*)arg;
+    usleep(v);
+    printf("%d ", v);
+    return NULL;
+}
+
+int main() {
+    int n, arr[MAXN];
+    pthread_t t[MAXN];
+
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++)
+        scanf("%d", &arr[i]);
+
+    for (int i = 0; i < n; i++)
+        pthread_create(&t[i], NULL, sleeper, &arr[i]);
+
+    for (int i = 0; i < n; i++)
+        pthread_join(t[i], NULL);
+}
+```
+**Принцип работы:**
+1. Каждое число из массива передаётся в отдельный поток
+2. Поток "засыпает" на время, пропорциональное значению числа
+3. После сна выводит число
+4. Меньшие числа просыпаются раньше → вывод в отсортированном порядке
+
+**Пример:**  
+Вход: `[300, 100, 200]`  
+Вывод: `100 200 300`
+
+---
+
+### **Общие выводы:**
+1. **Создание потоков:** `pthread_create()`
+2. **Синхронизация:** `pthread_join()`, `pthread_cancel()`
+3. **Передача параметров:** Через указатели, важно избегать гонок
+4. **Очистка ресурсов:** `pthread_cleanup_push()/pop()`
+5. **Практические паттерны:** Sleepsort, Worker threads
+
+
 # 7) Синхронизированный вывод родительского и дочернего потоков
 
 Программа демонстрирует синхронизацию двух потоков (родительского и дочернего) с использованием мьютексов для поочерёдного вывода сообщений.
