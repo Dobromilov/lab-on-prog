@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/DeKeyTable.dir/DeKeyTable.c.o -o DeKeyTable  libmylib.a 
