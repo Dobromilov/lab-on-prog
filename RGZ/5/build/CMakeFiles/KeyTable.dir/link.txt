@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/KeyTable.dir/KeyTable.c.o -o bin/KeyTable  -Wl,-rpath,/home/dobromilov/prog/rgz/5/build/lib lib/libmylib.so.1.0.0 
